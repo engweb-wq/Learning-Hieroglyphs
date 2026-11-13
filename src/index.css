@@ -1,0 +1,56 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-cairo: 'Cairo', system-ui, -apple-system, sans-serif;
+    --font-amiri: 'Amiri', serif;
+    --font-cinzel: 'Cinzel', serif;
+    --font-hieroglyphs: 'Noto Sans Egyptian Hieroglyphs', 'Segoe UI Historic', sans-serif;
+  }
+
+  body {
+    font-family: var(--font-cairo);
+    background-color: #F8F5EE;
+    color: #1c1917;
+  }
+}
+
+.font-hieroglyphs {
+  font-family: 'Noto Sans Egyptian Hieroglyphs', 'Segoe UI Historic', 'Amiri', sans-serif;
+}
+
+.font-serif-ar {
+  font-family: 'Amiri', serif;
+}
+
+.font-display-eg {
+  font-family: 'Cinzel', 'Cairo', serif;
+}
+
+/* Papyrus & stone background subtle patterns */
+.bg-papyrus-light {
+  background-color: #FAF6ED;
+  background-image: radial-gradient(#E8DFC9 0.75px, transparent 0.75px), radial-gradient(#E8DFC9 0.75px, #FAF6ED 0.75px);
+  background-size: 30px 30px;
+  background-position: 0 0, 15px 15px;
+}
+
+.cartouche-shadow {
+  box-shadow: 0 10px 25px -5px rgba(180, 130, 40, 0.2), 0 8px 10px -6px rgba(180, 130, 40, 0.15);
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #F1ECE1;
+}
+::-webkit-scrollbar-thumb {
+  background: #D4AF37;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #B8860B;
+}
