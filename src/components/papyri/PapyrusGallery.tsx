@@ -29,10 +29,11 @@ import { scribeAudio } from '../../utils/speechSynthesisService';
 import { soundFX } from '../../utils/soundEffects';
 import { BookOfTheDeadSection } from './BookOfTheDeadSection';
 import { RosettaStoneExplorer } from './RosettaStoneExplorer';
+import { ResurrectionJourney } from './ResurrectionJourney';
 
 type DisplayTranslationMode = 'all' | 'arabic' | 'transliteration' | 'phonetic' | 'english';
 type CategoryFilter = 'all' | 'funerary' | 'literature' | 'medicine_science' | 'history_royalty' | 'prophetic_parallels';
-type ExhibitionWing = 'papyri' | 'book_of_the_dead' | 'rosetta_stone';
+type ExhibitionWing = 'papyri' | 'book_of_the_dead' | 'rebirth_journey' | 'rosetta_stone';
 
 export const PapyrusGallery: React.FC = () => {
   const [activeWing, setActiveWing] = useState<ExhibitionWing>('papyri');
@@ -196,6 +197,22 @@ export const PapyrusGallery: React.FC = () => {
           type="button"
           onClick={() => {
             soundFX.playClickSound();
+            setActiveWing('rebirth_journey');
+          }}
+          className={`flex items-center gap-2 px-4 sm:px-5 py-3 rounded-2xl text-xs sm:text-sm font-bold transition-all ${
+            activeWing === 'rebirth_journey'
+              ? 'bg-amber-950 text-white ring-2 ring-amber-400 shadow-md scale-102'
+              : 'text-stone-700 hover:text-amber-950 hover:bg-amber-100/70'
+          }`}
+        >
+          <Compass className="w-4 h-4 text-amber-400" />
+          <span>رحلة البعث: فك النقوش</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => {
+            soundFX.playClickSound();
             setActiveWing('rosetta_stone');
           }}
           className={`flex items-center gap-2 px-4 sm:px-5 py-3 rounded-2xl text-xs sm:text-sm font-bold transition-all ${
@@ -211,6 +228,7 @@ export const PapyrusGallery: React.FC = () => {
 
       {/* Conditionally Render Other Wings */}
       {activeWing === 'book_of_the_dead' && <BookOfTheDeadSection />}
+      {activeWing === 'rebirth_journey' && <ResurrectionJourney />}
       {activeWing === 'rosetta_stone' && <RosettaStoneExplorer />}
 
       {/* Classic Papyri Gallery Wing */}

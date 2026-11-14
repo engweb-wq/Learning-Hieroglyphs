@@ -3,7 +3,7 @@ import confetti from 'canvas-confetti';
 import { 
   Trophy, Sparkles, Timer, RotateCcw, CheckCircle2, XCircle, 
   HelpCircle, Zap, Star, ShieldCheck, Flame, Award, ArrowRight, PenTool,
-  Heart, Clock, Brain, Volume2, AlertCircle, KeyRound, Landmark, Hammer, Puzzle
+  Heart, Clock, Brain, Volume2, AlertCircle, KeyRound, Landmark, Hammer, Puzzle, Trees
 } from 'lucide-react';
 import { DICTIONARY_50_WORDS } from '../../data/dictionary50Words';
 import { UNILITERAL_HIEROGLYPHS } from '../../data/hieroglyphsData';
@@ -15,8 +15,9 @@ import { TempleRunesGame } from './TempleRunesGame';
 import { StoneCarvingGame } from './StoneCarvingGame';
 import { ThreeCoreGamesAcademy } from './ThreeCoreGamesAcademy';
 import { DailyRiddleCorner } from '../puzzles/DailyRiddleCorner';
+import { LostSymbolsForestGame } from './LostSymbolsForestGame';
 
-type ActiveGame = 'core_academy' | 'daily_riddles' | 'stone_carving' | 'temple_runes' | 'flash_memory' | 'speed' | 'builder' | 'memory';
+type ActiveGame = 'core_academy' | 'lost_forest' | 'daily_riddles' | 'stone_carving' | 'temple_runes' | 'flash_memory' | 'speed' | 'builder' | 'memory';
 
 // ============================================================
 // GAME 4: وضع تحدي الذاكرة الموقوتة (Timed Flash Memory Challenge)
@@ -1233,6 +1234,16 @@ export const GamesHub: React.FC = () => {
             </button>
 
             <button
+              onClick={() => setActiveTab('lost_forest')}
+              className={`flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold rounded-xl transition-all whitespace-nowrap shrink-0 ${
+                activeTab === 'lost_forest' ? 'bg-amber-800 text-white shadow-xs' : 'text-stone-700 hover:text-stone-900'
+              }`}
+            >
+              <Trees className="w-3.5 h-3.5 text-amber-300" />
+              <span>غابة الرموز التائهة</span>
+            </button>
+
+            <button
               onClick={() => setActiveTab('daily_riddles')}
               className={`flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold rounded-xl transition-all whitespace-nowrap shrink-0 ${
                 activeTab === 'daily_riddles' ? 'bg-amber-800 text-white shadow-xs' : 'text-stone-700 hover:text-stone-900'
@@ -1307,6 +1318,7 @@ export const GamesHub: React.FC = () => {
 
       {/* Active Game Display */}
       {activeTab === 'core_academy' && <ThreeCoreGamesAcademy />}
+      {activeTab === 'lost_forest' && <LostSymbolsForestGame />}
       {activeTab === 'daily_riddles' && <DailyRiddleCorner />}
       {activeTab === 'stone_carving' && <StoneCarvingGame />}
       {activeTab === 'temple_runes' && <TempleRunesGame />}

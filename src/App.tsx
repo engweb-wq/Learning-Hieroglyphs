@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { AudienceMode, HieroglyphSign } from './types';
 import { Header } from './components/Header';
 import { HeroSection } from './components/HeroSection';
@@ -31,15 +31,44 @@ import { PronunciationChallenge } from './components/pronunciation/Pronunciation
 import { ArtifactExplorer } from './components/artifacts/ArtifactExplorer';
 import { DailyRiddleCorner } from './components/puzzles/DailyRiddleCorner';
 import { SimplifiedGrammarGuide } from './components/grammar/SimplifiedGrammarGuide';
+import { SoundLibraryStudio } from './components/audio/SoundLibraryStudio';
+import { ResurrectionJourney } from './components/papyri/ResurrectionJourney';
 import { InteractiveScribeQuiz } from './components/quiz/InteractiveScribeQuiz';
 import { Footer } from './components/Footer';
-import { Sparkles, BookOpen, Languages, PenTool, Zap, Award, History, Scroll, Video, Trophy, Eye, GraduationCap, Crown, Landmark, Hammer, Mic, Compass, Puzzle, BookOpenCheck } from 'lucide-react';
+import { Sparkles, BookOpen, Languages, PenTool, Zap, Award, History, Scroll, Video, Trophy, Eye, GraduationCap, Crown, Landmark, Hammer, Mic, Compass, Puzzle, BookOpenCheck, Volume2, VolumeX, Radio, Sun } from 'lucide-react';
 import { UNILITERAL_HIEROGLYPHS } from './data/hieroglyphsData';
+import { soundFX, SoundSettings } from './utils/soundEffects';
 
 export default function App() {
   const [currentMode, setCurrentMode] = useState<AudienceMode>('dictionary');
   const [drawingSign, setDrawingSign] = useState<HieroglyphSign>(UNILITERAL_HIEROGLYPHS[7]); // Owl (m)
+  const [soundSettings, setSoundSettings] = useState<SoundSettings>(soundFX.getSettings());
   const drawingSectionRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const unsubscribe = soundFX.subscribe(setSoundSettings);
+
+    const handleGlobalButtonClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (!target) return;
+      const btn = target.closest('button, [role="button"]') as HTMLElement | null;
+      if (!btn) return;
+      if ((btn as HTMLButtonElement).disabled || btn.getAttribute('aria-disabled') === 'true') {
+        return;
+      }
+      if (btn.getAttribute('data-sound') === 'none') {
+        return;
+      }
+      soundFX.playInteractiveButtonSound();
+    };
+
+    document.addEventListener('click', handleGlobalButtonClick, true);
+    return () => {
+      unsubscribe();
+      document.removeEventListener('click', handleGlobalButtonClick, true);
+      soundFX.stopAmbientTemple();
+    };
+  }, []);
 
   const handleSelectForDrawing = (sign: HieroglyphSign) => {
     setDrawingSign(sign);
@@ -174,6 +203,30 @@ export default function App() {
             >
               <BookOpenCheck className="w-4 h-4 text-amber-400" />
               <span>دليل القواعد المبسط</span>
+            </button>
+
+            <button
+              onClick={() => setCurrentMode('sound_library')}
+              className={`flex items-center gap-2 px-3.5 py-2 text-xs sm:text-sm font-bold rounded-xl transition-all whitespace-nowrap shrink-0 ${
+                currentMode === 'sound_library'
+                  ? 'bg-amber-800 text-white shadow-sm'
+                  : 'bg-white/80 hover:bg-white text-stone-700 border border-stone-200'
+              }`}
+            >
+              <Volume2 className="w-4 h-4 text-amber-400" />
+              <span>المكتبة الصوتية</span>
+            </button>
+
+            <button
+              onClick={() => setCurrentMode('rebirth_journey')}
+              className={`flex items-center gap-2 px-3.5 py-2 text-xs sm:text-sm font-bold rounded-xl transition-all whitespace-nowrap shrink-0 ${
+                currentMode === 'rebirth_journey'
+                  ? 'bg-amber-800 text-white shadow-sm'
+                  : 'bg-white/80 hover:bg-white text-stone-700 border border-stone-200'
+              }`}
+            >
+              <Sun className="w-4 h-4 text-amber-400" />
+              <span>رحلة البعث (كتاب الموتى)</span>
             </button>
 
             <button
@@ -321,13 +374,53 @@ export default function App() {
             </button>
           </div>
 
-          <a
-            href="#cartouche"
-            className="hidden md:flex items-center gap-1.5 text-xs font-bold text-amber-900 hover:text-amber-700 whitespace-nowrap"
-          >
-            <PenTool className="w-3.5 h-3.5" />
-            <span>صانع الخرطوشة</span>
-          </a>
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              data-sound="none"
+              onClick={() => soundFX.toggleAmbientTemple()}
+              title={soundSettings.ambientPlaying ? 'إيقاف أجواء المعبد' : 'تشغيل أجواء المعبد الهادئة'}
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-bold border transition-colors whitespace-nowrap ${
+                soundSettings.ambientPlaying
+                  ? 'bg-amber-900 text-amber-100 border-amber-950'
+                  : 'bg-white/80 hover:bg-white text-stone-700 border-stone-200'
+              }`}
+            >
+              <Radio className={`w-3.5 h-3.5 ${soundSettings.ambientPlaying ? 'text-amber-300 animate-pulse' : 'text-amber-700'}`} />
+              <span className="hidden lg:inline">{soundSettings.ambientPlaying ? 'أجواء المعبد تعمل' : 'أجواء المعبد'}</span>
+            </button>
+
+            <button
+              type="button"
+              data-sound="none"
+              onClick={() => {
+                const next = !soundSettings.enabled;
+                soundFX.setEnabled(next);
+                if (next) soundFX.playInteractiveButtonSound(true);
+              }}
+              title={soundSettings.enabled ? 'كتم مؤثرات التعلم' : 'تفعيل مؤثرات التعلم'}
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-bold border transition-colors whitespace-nowrap ${
+                soundSettings.enabled
+                  ? 'bg-emerald-50 text-emerald-900 border-emerald-200 hover:bg-emerald-100'
+                  : 'bg-stone-200 text-stone-600 border-stone-300 hover:bg-stone-300'
+              }`}
+            >
+              {soundSettings.enabled ? (
+                <Volume2 className="w-3.5 h-3.5 text-emerald-700" />
+              ) : (
+                <VolumeX className="w-3.5 h-3.5 text-stone-500" />
+              )}
+              <span className="hidden xl:inline">{soundSettings.enabled ? 'الصوت مفعّل' : 'مكتوم'}</span>
+            </button>
+
+            <a
+              href="#cartouche"
+              className="hidden md:flex items-center gap-1.5 text-xs font-bold text-amber-900 hover:text-amber-700 whitespace-nowrap pr-1"
+            >
+              <PenTool className="w-3.5 h-3.5" />
+              <span>صانع الخرطوشة</span>
+            </a>
+          </div>
         </div>
       </div>
 
@@ -537,6 +630,20 @@ export default function App() {
         {currentMode === 'grammar' && (
           <div className="space-y-14 animate-fadeIn">
             <SimplifiedGrammarGuide />
+          </div>
+        )}
+
+        {/* INTERACTIVE SOUND LIBRARY STUDIO */}
+        {currentMode === 'sound_library' && (
+          <div className="space-y-14 animate-fadeIn">
+            <SoundLibraryStudio />
+          </div>
+        )}
+
+        {/* RESURRECTION JOURNEY (STEP-BY-STEP BOOK OF THE DEAD DECODER) */}
+        {currentMode === 'rebirth_journey' && (
+          <div className="space-y-14 animate-fadeIn">
+            <ResurrectionJourney />
           </div>
         )}
 

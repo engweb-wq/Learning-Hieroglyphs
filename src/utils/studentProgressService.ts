@@ -1,4 +1,5 @@
 import { StudentProgressData, ScribeRank, AchievementBadge, LearningLessonModule } from '../types';
+import { soundFX } from './soundEffects';
 
 export const SCRIBE_RANKS: ScribeRank[] = [
   {
@@ -441,7 +442,8 @@ const DEFAULT_PROGRESS: StudentProgressData = {
     symbolRecognition: 0,
     wordAssembly: 0,
     meaningDecoder: 0,
-    pronunciationChallenge: 0
+    pronunciationChallenge: 0,
+    lostSymbolsForest: 0
   },
   unlockedBadgeIds: [
     'badge-ankh-first-steps',
@@ -561,6 +563,11 @@ class StudentProgressManager {
     };
 
     this.save();
+    if (amount >= 25) {
+      soundFX.playTaskCompletedFanfare();
+    } else if (amount > 0) {
+      soundFX.playSuccessSound();
+    }
     return this.cache;
   }
 
@@ -600,6 +607,9 @@ class StudentProgressManager {
     };
 
     this.save();
+    if (score > 0) {
+      soundFX.playTaskCompletedFanfare();
+    }
     return this.cache;
   }
 
@@ -644,6 +654,7 @@ class StudentProgressManager {
     };
 
     this.save();
+    soundFX.playTaskCompletedFanfare();
     return this.cache;
   }
 

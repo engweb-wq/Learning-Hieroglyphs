@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpen, Sparkles, Languages, Users, Award, History, Scroll, Video, Trophy, Eye, GraduationCap, Hammer, Mic, Compass, Puzzle, BookOpenCheck } from 'lucide-react';
+import { BookOpen, Sparkles, Languages, Users, Award, History, Scroll, Video, Trophy, Eye, GraduationCap, Hammer, Mic, Compass, Puzzle, BookOpenCheck, Volume2, Sun } from 'lucide-react';
 import { AudienceMode } from '../types';
 
 interface HeroSectionProps {
@@ -189,6 +189,30 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 >
                   <BookOpenCheck className="w-4 h-4 text-amber-300" />
                   <span>دليل القواعد المبسط</span>
+                </button>
+
+                <button
+                  onClick={() => onSelectMode('sound_library')}
+                  className={`flex items-center gap-2 px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all whitespace-nowrap shrink-0 ${
+                    currentMode === 'sound_library'
+                      ? 'bg-amber-800 text-white shadow-sm'
+                      : 'text-stone-700 hover:text-stone-900 hover:bg-stone-100'
+                  }`}
+                >
+                  <Volume2 className="w-4 h-4 text-amber-300" />
+                  <span>المكتبة الصوتية</span>
+                </button>
+
+                <button
+                  onClick={() => onSelectMode('rebirth_journey')}
+                  className={`flex items-center gap-2 px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all whitespace-nowrap shrink-0 ${
+                    currentMode === 'rebirth_journey'
+                      ? 'bg-amber-800 text-white shadow-sm'
+                      : 'text-stone-700 hover:text-stone-900 hover:bg-stone-100'
+                  }`}
+                >
+                  <Sun className="w-4 h-4 text-amber-300" />
+                  <span>رحلة البعث (كتاب الموتى)</span>
                 </button>
 
                 <button
