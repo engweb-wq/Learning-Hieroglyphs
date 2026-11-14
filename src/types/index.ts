@@ -1,4 +1,4 @@
-export type AudienceMode = 'kids' | 'adults' | 'dictionary' | 'shared_roots' | 'pronunciation' | 'games' | 'heritage' | 'timeline' | 'papyri' | 'video_dict' | 'progress' | 'scanner' | 'tutor' | 'pharaohs' | 'architecture' | 'timemachine' | 'stone_engraving';
+export type AudienceMode = 'kids' | 'adults' | 'dictionary' | 'shared_roots' | 'pronunciation' | 'artifacts' | 'riddles' | 'grammar' | 'games' | 'heritage' | 'timeline' | 'papyri' | 'video_dict' | 'progress' | 'scanner' | 'tutor' | 'pharaohs' | 'architecture' | 'timemachine' | 'stone_engraving';
 
 export interface RoyalCartouche {
   prenomenHieroglyphs: string; // اسم التتويج / العرش (نسو-بيتي)

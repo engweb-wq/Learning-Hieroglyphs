@@ -28,9 +28,12 @@ import { PharaohsChronicle } from './components/pharaohs/PharaohsChronicle';
 import { AncientEgyptianArchitecture } from './components/architecture/AncientEgyptianArchitecture';
 import { StoneEngravingStudio } from './components/engraving/StoneEngravingStudio';
 import { PronunciationChallenge } from './components/pronunciation/PronunciationChallenge';
+import { ArtifactExplorer } from './components/artifacts/ArtifactExplorer';
+import { DailyRiddleCorner } from './components/puzzles/DailyRiddleCorner';
+import { SimplifiedGrammarGuide } from './components/grammar/SimplifiedGrammarGuide';
 import { InteractiveScribeQuiz } from './components/quiz/InteractiveScribeQuiz';
 import { Footer } from './components/Footer';
-import { Sparkles, BookOpen, Languages, PenTool, Zap, Award, History, Scroll, Video, Trophy, Eye, GraduationCap, Crown, Landmark, Hammer, Mic } from 'lucide-react';
+import { Sparkles, BookOpen, Languages, PenTool, Zap, Award, History, Scroll, Video, Trophy, Eye, GraduationCap, Crown, Landmark, Hammer, Mic, Compass, Puzzle, BookOpenCheck } from 'lucide-react';
 import { UNILITERAL_HIEROGLYPHS } from './data/hieroglyphsData';
 
 export default function App() {
@@ -135,6 +138,42 @@ export default function App() {
             >
               <Mic className="w-4 h-4 text-amber-400" />
               <span>تحدي النطق</span>
+            </button>
+
+            <button
+              onClick={() => setCurrentMode('artifacts')}
+              className={`flex items-center gap-2 px-3.5 py-2 text-xs sm:text-sm font-bold rounded-xl transition-all whitespace-nowrap shrink-0 ${
+                currentMode === 'artifacts'
+                  ? 'bg-amber-800 text-white shadow-sm'
+                  : 'bg-white/80 hover:bg-white text-stone-700 border border-stone-200'
+              }`}
+            >
+              <Compass className="w-4 h-4 text-amber-400" />
+              <span>مستكشف القطع الأثرية</span>
+            </button>
+
+            <button
+              onClick={() => setCurrentMode('riddles')}
+              className={`flex items-center gap-2 px-3.5 py-2 text-xs sm:text-sm font-bold rounded-xl transition-all whitespace-nowrap shrink-0 ${
+                currentMode === 'riddles'
+                  ? 'bg-amber-800 text-white shadow-sm'
+                  : 'bg-white/80 hover:bg-white text-stone-700 border border-stone-200'
+              }`}
+            >
+              <Puzzle className="w-4 h-4 text-amber-400" />
+              <span>ركن الألغاز اليومي</span>
+            </button>
+
+            <button
+              onClick={() => setCurrentMode('grammar')}
+              className={`flex items-center gap-2 px-3.5 py-2 text-xs sm:text-sm font-bold rounded-xl transition-all whitespace-nowrap shrink-0 ${
+                currentMode === 'grammar'
+                  ? 'bg-amber-800 text-white shadow-sm'
+                  : 'bg-white/80 hover:bg-white text-stone-700 border border-stone-200'
+              }`}
+            >
+              <BookOpenCheck className="w-4 h-4 text-amber-400" />
+              <span>دليل القواعد المبسط</span>
             </button>
 
             <button
@@ -378,6 +417,9 @@ export default function App() {
             {/* Comprehensive Table */}
             <AdultsAlphabetTable />
 
+            {/* Simplified Visual Grammar Guide */}
+            <SimplifiedGrammarGuide />
+
             {/* Gardner Sentence Writing Lab & Direction Verification */}
             <GardnerSentenceWriter />
 
@@ -474,6 +516,27 @@ export default function App() {
         {currentMode === 'pronunciation' && (
           <div className="space-y-14 animate-fadeIn">
             <PronunciationChallenge />
+          </div>
+        )}
+
+        {/* RARE ARTIFACT EXPLORER & 3D INSCRIPTION FLIP STUDIO */}
+        {currentMode === 'artifacts' && (
+          <div className="space-y-14 animate-fadeIn">
+            <ArtifactExplorer />
+          </div>
+        )}
+
+        {/* DAILY WISDOM RIDDLE CORNER */}
+        {currentMode === 'riddles' && (
+          <div className="space-y-14 animate-fadeIn">
+            <DailyRiddleCorner />
+          </div>
+        )}
+
+        {/* SIMPLIFIED VISUAL GRAMMAR GUIDE */}
+        {currentMode === 'grammar' && (
+          <div className="space-y-14 animate-fadeIn">
+            <SimplifiedGrammarGuide />
           </div>
         )}
 
