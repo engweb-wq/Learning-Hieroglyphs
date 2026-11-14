@@ -18,6 +18,15 @@ export interface PlayAudioOptions {
   onError?: (err: unknown) => void;
 }
 
+export type DictionaryPronunciationMode = 'both' | 'egyptian' | 'arabic';
+export type DictionarySpeechPhase = 'egyptian' | 'arabic' | null;
+
+export interface DictionaryAudioOptions extends PlayAudioOptions {
+  pronunciationMode?: DictionaryPronunciationMode;
+  includeRootNote?: boolean;
+  onPhaseChange?: (phase: DictionarySpeechPhase) => void;
+}
+
 class ScribeAudioSynthesizer {
   private audioCtx: AudioContext | null = null;
   private voices: SpeechSynthesisVoice[] = [];
@@ -25,6 +34,8 @@ class ScribeAudioSynthesizer {
   private activeId: string | null = null;
   private currentLanguage: SpeechLanguage = 'ar';
   private listeners: Set<(id: string | null) => void> = new Set();
+  private playbackToken = 0;
+  private activeTimer: ReturnType<typeof setTimeout> | null = null;
 
   constructor() {
     this.initVoices();
@@ -217,9 +228,21 @@ class ScribeAudioSynthesizer {
   }
 
   /**
-   * Stop any currently ongoing speech synthesis
+   * Check whether browser supports Web Speech API
+   */
+  public isSpeechSupported(): boolean {
+    return typeof window !== 'undefined' && 'speechSynthesis' in window && typeof SpeechSynthesisUtterance !== 'undefined';
+  }
+
+  /**
+   * Stop any currently ongoing speech synthesis and clear queued timers
    */
   public stop() {
+    this.playbackToken += 1;
+    if (this.activeTimer) {
+      clearTimeout(this.activeTimer);
+      this.activeTimer = null;
+    }
     if (typeof window !== 'undefined' && window.speechSynthesis) {
       window.speechSynthesis.cancel();
     }
@@ -452,6 +475,163 @@ class ScribeAudioSynthesizer {
       this.setActiveId(null);
       options?.onError?.(err);
     }
+  }
+
+  /**
+   * Clean text fragments for clearer Web Speech API pronunciation
+   */
+  private sanitizeForSpeech(raw: string): string {
+    return raw
+      .replace(/\s*\/\s*/g, '، أو ')
+      .replace(/\([^)]*\)/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  /**
+   * Interactive pronunciation for Illustrated Dictionary words:
+   * Uses Web Speech API to speak reconstructed Ancient Egyptian pronunciation
+   * followed by Arabic meaning (or individually based on pronunciationMode).
+   */
+  public speakDictionaryWord(
+    word: {
+      id: string;
+      arabicTransliteration: string;
+      transliteration: string;
+      arabicMeaning: string;
+      arabicSharedRootNote?: string;
+    },
+    options?: DictionaryAudioOptions
+  ) {
+    this.stop();
+    const token = this.playbackToken;
+    const id = options?.id || word.id;
+    const mode: DictionaryPronunciationMode = options?.pronunciationMode || 'both';
+    const baseRate = options?.rate ?? 0.9;
+
+    this.setActiveId(id);
+
+    // Subtle consonant acoustic cue using the initial reconstructed Egyptian sound
+    const firstChar = this.sanitizeForSpeech(word.arabicTransliteration).charAt(0) || 'أ';
+    this.playPhoneticAcoustic(firstChar, word.transliteration);
+
+    if (!this.isSpeechSupported()) {
+      options?.onPhaseChange?.(null);
+      options?.onEnd?.();
+      this.setActiveId(null);
+      return;
+    }
+
+    const egyptianSpeech = this.sanitizeForSpeech(word.arabicTransliteration);
+    const arabicMeaningSpeech = this.sanitizeForSpeech(word.arabicMeaning);
+    const rootNoteSpeech = options?.includeRootNote && word.arabicSharedRootNote
+      ? `.. ${this.sanitizeForSpeech(word.arabicSharedRootNote)}`
+      : '';
+
+    const speakUtterance = (
+      text: string,
+      rate: number,
+      pitch: number,
+      phase: DictionarySpeechPhase,
+      onDone: () => void
+    ) => {
+      if (this.playbackToken !== token) return;
+      options?.onPhaseChange?.(phase);
+
+      try {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'ar-EG';
+        utterance.rate = rate;
+        utterance.pitch = pitch;
+
+        const voice = this.getBestVoiceForLocale('ar-EG');
+        if (voice) {
+          utterance.voice = voice;
+        }
+
+        utterance.onstart = () => {
+          if (this.playbackToken === token) {
+            options?.onStart?.();
+          }
+        };
+
+        utterance.onend = () => {
+          if (this.playbackToken === token) {
+            onDone();
+          }
+        };
+
+        utterance.onerror = (err) => {
+          if (this.playbackToken === token) {
+            options?.onPhaseChange?.(null);
+            if (this.activeId === id) {
+              this.setActiveId(null);
+            }
+            options?.onError?.(err);
+          }
+        };
+
+        window.speechSynthesis.speak(utterance);
+      } catch (err) {
+        if (this.playbackToken === token) {
+          options?.onPhaseChange?.(null);
+          this.setActiveId(null);
+          options?.onError?.(err);
+        }
+      }
+    };
+
+    const finishPlayback = () => {
+      if (this.playbackToken !== token) return;
+      options?.onPhaseChange?.(null);
+      if (this.activeId === id) {
+        this.setActiveId(null);
+      }
+      options?.onEnd?.();
+    };
+
+    this.activeTimer = setTimeout(() => {
+      if (this.playbackToken !== token) return;
+
+      if (mode === 'egyptian') {
+        speakUtterance(
+          `بِالمِصْرِيَّةِ القَدِيمَة: ${egyptianSpeech}`,
+          Math.max(0.65, baseRate - 0.1),
+          0.96,
+          'egyptian',
+          finishPlayback
+        );
+      } else if (mode === 'arabic') {
+        speakUtterance(
+          `${arabicMeaningSpeech}${rootNoteSpeech}`,
+          baseRate,
+          1.0,
+          'arabic',
+          finishPlayback
+        );
+      } else {
+        // Sequential: Reconstructed Ancient Egyptian first, then Arabic meaning
+        speakUtterance(
+          `بِالمِصْرِيَّةِ القَدِيمَة: ${egyptianSpeech}`,
+          Math.max(0.65, baseRate - 0.1),
+          0.96,
+          'egyptian',
+          () => {
+            if (this.playbackToken !== token) return;
+            this.activeTimer = setTimeout(() => {
+              if (this.playbackToken !== token) return;
+              speakUtterance(
+                `وَبِالعَرَبِيَّة: ${arabicMeaningSpeech}${rootNoteSpeech}`,
+                baseRate,
+                1.02,
+                'arabic',
+                finishPlayback
+              );
+            }, 220);
+          }
+        );
+      }
+    }, 80);
   }
 }
 

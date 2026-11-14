@@ -26,9 +26,11 @@ import { AIHieroglyphScanner } from './components/scanner/AIHieroglyphScanner';
 import { AIEgyptianTutor } from './components/tutor/AIEgyptianTutor';
 import { PharaohsChronicle } from './components/pharaohs/PharaohsChronicle';
 import { AncientEgyptianArchitecture } from './components/architecture/AncientEgyptianArchitecture';
+import { StoneEngravingStudio } from './components/engraving/StoneEngravingStudio';
+import { PronunciationChallenge } from './components/pronunciation/PronunciationChallenge';
 import { InteractiveScribeQuiz } from './components/quiz/InteractiveScribeQuiz';
 import { Footer } from './components/Footer';
-import { Sparkles, BookOpen, Languages, PenTool, Zap, Award, History, Scroll, Video, Trophy, Eye, GraduationCap, Crown, Landmark } from 'lucide-react';
+import { Sparkles, BookOpen, Languages, PenTool, Zap, Award, History, Scroll, Video, Trophy, Eye, GraduationCap, Crown, Landmark, Hammer, Mic } from 'lucide-react';
 import { UNILITERAL_HIEROGLYPHS } from './data/hieroglyphsData';
 
 export default function App() {
@@ -89,7 +91,7 @@ export default function App() {
 
             <button
               onClick={() => setCurrentMode('dictionary')}
-              className={`flex items-center gap-2 px-3.5 py-2 text-xs sm:text-sm font-bold rounded-xl transition-all whitespace-nowrap ${
+              className={`flex items-center gap-2 px-3.5 py-2 text-xs sm:text-sm font-bold rounded-xl transition-all whitespace-nowrap shrink-0 ${
                 currentMode === 'dictionary'
                   ? 'bg-amber-800 text-white shadow-sm'
                   : 'bg-white/80 hover:bg-white text-stone-700 border border-stone-200'
@@ -100,15 +102,39 @@ export default function App() {
             </button>
 
             <button
+              onClick={() => setCurrentMode('shared_roots')}
+              className={`flex items-center gap-2 px-3.5 py-2 text-xs sm:text-sm font-bold rounded-xl transition-all whitespace-nowrap shrink-0 ${
+                currentMode === 'shared_roots'
+                  ? 'bg-amber-800 text-white shadow-sm'
+                  : 'bg-white/80 hover:bg-white text-stone-700 border border-stone-200'
+              }`}
+            >
+              <Languages className="w-4 h-4 text-amber-400" />
+              <span>قاموس الجذور العربية</span>
+            </button>
+
+            <button
               onClick={() => setCurrentMode('games')}
-              className={`flex items-center gap-2 px-3.5 py-2 text-xs sm:text-sm font-bold rounded-xl transition-all whitespace-nowrap ${
+              className={`flex items-center gap-2 px-3.5 py-2 text-xs sm:text-sm font-bold rounded-xl transition-all whitespace-nowrap shrink-0 ${
                 currentMode === 'games'
                   ? 'bg-amber-800 text-white shadow-sm'
                   : 'bg-white/80 hover:bg-white text-stone-700 border border-stone-200'
               }`}
             >
               <Zap className="w-4 h-4 text-amber-400" />
-              <span>ألعاب الكاتب (6 ألعاب)</span>
+              <span>ألعاب الكاتب التفاعلية</span>
+            </button>
+
+            <button
+              onClick={() => setCurrentMode('pronunciation')}
+              className={`flex items-center gap-2 px-3.5 py-2 text-xs sm:text-sm font-bold rounded-xl transition-all whitespace-nowrap shrink-0 ${
+                currentMode === 'pronunciation'
+                  ? 'bg-amber-800 text-white shadow-sm'
+                  : 'bg-white/80 hover:bg-white text-stone-700 border border-stone-200'
+              }`}
+            >
+              <Mic className="w-4 h-4 text-amber-400" />
+              <span>تحدي النطق</span>
             </button>
 
             <button
@@ -242,6 +268,18 @@ export default function App() {
               <Landmark className="w-4 h-4 text-amber-400" />
               <span>العمارة المصرية 🏛️</span>
             </button>
+
+            <button
+              onClick={() => setCurrentMode('stone_engraving')}
+              className={`flex items-center gap-2 px-3.5 py-2 text-xs sm:text-sm font-bold rounded-xl transition-all whitespace-nowrap ${
+                currentMode === 'stone_engraving'
+                  ? 'bg-amber-800 text-white shadow-sm'
+                  : 'bg-white/80 hover:bg-white text-stone-700 border border-stone-200'
+              }`}
+            >
+              <Hammer className="w-4 h-4 text-amber-400" />
+              <span>لوح النقش الحجري</span>
+            </button>
           </div>
 
           <a
@@ -257,10 +295,10 @@ export default function App() {
       {/* Main Content Sections */}
       <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16 w-full">
         
-        {/* VISUAL DICTIONARY 50 WORDS */}
-        {currentMode === 'dictionary' && (
+        {/* VISUAL DICTIONARY & SHARED ROOTS */}
+        {(currentMode === 'dictionary' || currentMode === 'shared_roots') && (
           <div className="space-y-14 animate-fadeIn">
-            <VisualDictionary />
+            <VisualDictionary initialSubTab={currentMode === 'shared_roots' ? 'shared_roots' : 'words'} />
           </div>
         )}
 
@@ -422,6 +460,20 @@ export default function App() {
         {currentMode === 'architecture' && (
           <div className="space-y-14 animate-fadeIn">
             <AncientEgyptianArchitecture />
+          </div>
+        )}
+
+        {/* VIRTUAL STONE ENGRAVING STUDIO */}
+        {currentMode === 'stone_engraving' && (
+          <div className="space-y-14 animate-fadeIn">
+            <StoneEngravingStudio />
+          </div>
+        )}
+
+        {/* INTERACTIVE MICROPHONE PRONUNCIATION CHALLENGE */}
+        {currentMode === 'pronunciation' && (
+          <div className="space-y-14 animate-fadeIn">
+            <PronunciationChallenge />
           </div>
         )}
 

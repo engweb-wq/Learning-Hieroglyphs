@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Sparkles,
   Volume2,
@@ -28,6 +28,14 @@ export const PlantsFloraDictionary: React.FC = () => {
   const [activePlayingId, setActivePlayingId] = useState<string | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(SACRED_FLORA_LIST[0].id);
 
+  useEffect(() => {
+    const unsubscribe = scribeAudio.subscribe((id) => setActivePlayingId(id));
+    return () => {
+      unsubscribe();
+      scribeAudio.stop();
+    };
+  }, []);
+
   const filteredFlora = SACRED_FLORA_LIST.filter((item) => {
     const matchesCategory = selectedCategory === 'all' || item.category === selectedCategory;
     const q = searchQuery.trim().toLowerCase();
@@ -54,8 +62,12 @@ export const PlantsFloraDictionary: React.FC = () => {
     }
     setActivePlayingId(item.id);
     soundFX.playAncientChime(540);
-    const textToSpeak = `رمز ${item.nameAr}.. كود جاردنر ${item.gardinerCode}.. نطقه: ${item.phoneticReadingAr}.. في النصوص الجنائزية: ${item.funeraryMeaningAr}.. وفي الحياة اليومية: ${item.dailyLifeMeaningAr}`;
-    scribeAudio.speakText(textToSpeak, { id: item.id });
+    const textToSpeak = `رمز ${item.nameAr}.. كود جاردنر ${item.gardinerCode}.. نطقه بالمصرية القديمة: ${item.phoneticReadingAr}.. في النصوص الجنائزية: ${item.funeraryMeaningAr}.. وفي الحياة اليومية: ${item.dailyLifeMeaningAr}`;
+    scribeAudio.speakText(textToSpeak, {
+      id: item.id,
+      onEnd: () => setActivePlayingId(null),
+      onError: () => setActivePlayingId(null),
+    });
   };
 
   return (

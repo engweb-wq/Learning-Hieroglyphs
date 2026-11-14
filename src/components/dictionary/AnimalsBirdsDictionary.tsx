@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Bird,
   Volume2,
@@ -24,6 +24,14 @@ export const AnimalsBirdsDictionary: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<'all' | 'birds' | 'mammals' | 'reptiles_insects'>('all');
   const [activePlayingId, setActivePlayingId] = useState<string | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(SACRED_FAUNA_DATA[0].id);
+
+  useEffect(() => {
+    const unsubscribe = scribeAudio.subscribe((id) => setActivePlayingId(id));
+    return () => {
+      unsubscribe();
+      scribeAudio.stop();
+    };
+  }, []);
 
   const categories = [
     { id: 'all', nameAr: 'جميع الكائنات (16)' },
@@ -56,8 +64,12 @@ export const AnimalsBirdsDictionary: React.FC = () => {
     }
     setActivePlayingId(item.id);
     soundFX.playAncientChime(580);
-    const textToSpeak = `رمز ${item.nameAr}.. كود جاردنر ${item.gardinerCode}.. نطقه: ${item.phoneticReadingAr}.. دلالته الثقافية: ${item.culturalSignificanceAr}`;
-    scribeAudio.speakText(textToSpeak, { id: item.id });
+    const textToSpeak = `رمز ${item.nameAr}.. كود جاردنر ${item.gardinerCode}.. نطقه بالمصرية القديمة: ${item.phoneticReadingAr}.. دلالته الثقافية: ${item.culturalSignificanceAr}`;
+    scribeAudio.speakText(textToSpeak, {
+      id: item.id,
+      onEnd: () => setActivePlayingId(null),
+      onError: () => setActivePlayingId(null),
+    });
   };
 
   return (

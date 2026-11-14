@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Scale,
   Sparkles,
@@ -29,6 +29,14 @@ export const EgyptianAntonymsSection: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [expandedSentenceId, setExpandedSentenceId] = useState<string | null>(EGYPTIAN_ANTONYM_PAIRS[0].id);
   const [activePlayingId, setActivePlayingId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const unsubscribe = scribeAudio.subscribe((id) => setActivePlayingId(id));
+    return () => {
+      unsubscribe();
+      scribeAudio.stop();
+    };
+  }, []);
 
   // Mini quiz game state
   const [isQuizMode, setIsQuizMode] = useState<boolean>(false);
@@ -69,7 +77,11 @@ export const EgyptianAntonymsSection: React.FC = () => {
     }
     setActivePlayingId(uniqueId);
     soundFX.playAncientChime(560);
-    scribeAudio.speakText(word.pronunciationSound, { id: uniqueId });
+    scribeAudio.speakText(word.pronunciationSound, {
+      id: uniqueId,
+      onEnd: () => setActivePlayingId(null),
+      onError: () => setActivePlayingId(null),
+    });
   };
 
   const handlePlaySentenceSound = (pair: AntonymPair) => {
@@ -82,7 +94,11 @@ export const EgyptianAntonymsSection: React.FC = () => {
     setActivePlayingId(sId);
     soundFX.playAncientChime(620);
     const textToSpeak = `الجملة المصرية: ${pair.exampleSentence.arabicPhonetics}.. ومعناها: ${pair.exampleSentence.arabicTranslation}`;
-    scribeAudio.speakText(textToSpeak, { id: sId });
+    scribeAudio.speakText(textToSpeak, {
+      id: sId,
+      onEnd: () => setActivePlayingId(null),
+      onError: () => setActivePlayingId(null),
+    });
   };
 
   // Quiz game handlers

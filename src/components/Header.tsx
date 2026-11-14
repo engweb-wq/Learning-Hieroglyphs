@@ -51,7 +51,7 @@ export const Header: React.FC<HeaderProps> = ({ currentMode, onSelectMode, onOpe
           <button
             onClick={() => onSelectMode('dictionary')}
             className={`transition-colors whitespace-nowrap shrink-0 pb-1 border-b-2 ${
-              currentMode === 'dictionary' 
+              currentMode === 'dictionary' || currentMode === 'shared_roots'
                 ? 'border-amber-700 text-amber-900 font-bold' 
                 : 'border-transparent hover:text-amber-800 hover:border-amber-300'
             }`}

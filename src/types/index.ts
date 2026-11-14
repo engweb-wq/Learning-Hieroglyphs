@@ -1,4 +1,4 @@
-export type AudienceMode = 'kids' | 'adults' | 'dictionary' | 'games' | 'heritage' | 'timeline' | 'papyri' | 'video_dict' | 'progress' | 'scanner' | 'tutor' | 'pharaohs' | 'architecture' | 'timemachine';
+export type AudienceMode = 'kids' | 'adults' | 'dictionary' | 'shared_roots' | 'pronunciation' | 'games' | 'heritage' | 'timeline' | 'papyri' | 'video_dict' | 'progress' | 'scanner' | 'tutor' | 'pharaohs' | 'architecture' | 'timemachine' | 'stone_engraving';
 
 export interface RoyalCartouche {
   prenomenHieroglyphs: string; // اسم التتويج / العرش (نسو-بيتي)
@@ -245,6 +245,10 @@ export interface StudentProgressData {
     royalExamScore: number;
     templeRunes?: number;
     stoneCarving?: number;
+    symbolRecognition?: number;
+    wordAssembly?: number;
+    meaningDecoder?: number;
+    pronunciationChallenge?: number;
   };
   unlockedBadgeIds: string[];
   recentActivityLog: {
@@ -500,5 +504,41 @@ export interface ArchitectureBuildingType {
     sanctity: string;
     evolution: string;
   };
+}
+
+export type SharedRootRelationType = 'afro_asiatic_cognate' | 'phonetic_semantic' | 'cultural_heritage';
+
+export type SharedRootDomain = 'nature' | 'body_life' | 'actions_senses' | 'society_home' | 'heritage_titles';
+
+export interface SharedRootUsageExample {
+  hieroglyphs: string;
+  transliteration: string;
+  phoneticAr: string;
+  arabicTranslation: string;
+  arabicParallelSentence: string;
+}
+
+export interface SharedRootEntry {
+  id: string;
+  hieroglyphs: string;
+  gardinerCodes: string[];
+  transliteration: string;
+  approximatePronunciationAr: string;
+  arabicMeaning: string;
+  englishMeaning: string;
+  arabicCognate: string;
+  arabicRoot: string;
+  consonantBridge: {
+    egyptian: string;
+    arabic: string;
+    noteAr?: string;
+  }[];
+  relationType: SharedRootRelationType;
+  relationLabelAr: string;
+  domain: SharedRootDomain;
+  domainLabelAr: string;
+  similarityExplanationAr: string;
+  phoneticLawSummaryAr: string;
+  examples: SharedRootUsageExample[];
 }
 

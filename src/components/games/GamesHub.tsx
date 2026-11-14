@@ -13,8 +13,9 @@ import { scribeAudio } from '../../utils/speechSynthesisService';
 import { studentProgress } from '../../utils/studentProgressService';
 import { TempleRunesGame } from './TempleRunesGame';
 import { StoneCarvingGame } from './StoneCarvingGame';
+import { ThreeCoreGamesAcademy } from './ThreeCoreGamesAcademy';
 
-type ActiveGame = 'stone_carving' | 'temple_runes' | 'flash_memory' | 'speed' | 'builder' | 'memory';
+type ActiveGame = 'core_academy' | 'stone_carving' | 'temple_runes' | 'flash_memory' | 'speed' | 'builder' | 'memory';
 
 // ============================================================
 // GAME 4: وضع تحدي الذاكرة الموقوتة (Timed Flash Memory Challenge)
@@ -1197,7 +1198,7 @@ const KarnakMemoryGame: React.FC = () => {
 // MAIN GAMES HUB CONTAINER
 // ==========================================
 export const GamesHub: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<ActiveGame>('temple_runes');
+  const [activeTab, setActiveTab] = useState<ActiveGame>('core_academy');
 
   return (
     <div id="games" className="space-y-6 text-right">
@@ -1211,79 +1212,90 @@ export const GamesHub: React.FC = () => {
               <span>ألعاب تعليمية تفاعلية للكبار والصغار</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-stone-900 font-display-eg">
-              ألعاب الكاتب الفرعوني (6 أنماط لعب)
+              ألعاب الكاتب الفرعوني
             </h2>
             <p className="text-xs sm:text-sm text-stone-600 mt-1">
-              طور مهاراتك باللعب والتنافس وحصد النقاط والرتب، وتحدَّ دقة نقش الأحجار وفك طلاسم المعابد القديمة.
+              ابدأ بالألعاب التعليمية الثلاث للصغار والكبار (الرموز، بناء الكلمات، المعاني)، أو خُض تحديات نقش الحجر وفك طلاسم المعبد.
             </p>
           </div>
 
           {/* Game Switcher Tabs */}
-          <div className="inline-flex p-1.5 bg-white rounded-2xl border border-stone-200 shadow-xs self-start sm:self-auto max-w-full overflow-x-auto">
+          <div className="inline-flex p-1.5 bg-white rounded-2xl border border-stone-200 shadow-xs self-start sm:self-auto max-w-full overflow-x-auto gap-1">
+            <button
+              onClick={() => setActiveTab('core_academy')}
+              className={`flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold rounded-xl transition-all whitespace-nowrap shrink-0 ${
+                activeTab === 'core_academy' ? 'bg-amber-800 text-white shadow-xs' : 'text-stone-700 hover:text-stone-900'
+              }`}
+            >
+              <Award className="w-3.5 h-3.5 text-amber-300" />
+              <span>الألعاب الثلاث (صغار وكبار)</span>
+            </button>
+
             <button
               onClick={() => setActiveTab('stone_carving')}
-              className={`flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold rounded-xl transition-all whitespace-nowrap ${
+              className={`flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold rounded-xl transition-all whitespace-nowrap shrink-0 ${
                 activeTab === 'stone_carving' ? 'bg-amber-800 text-white shadow-xs' : 'text-stone-700 hover:text-stone-900'
               }`}
             >
               <Hammer className="w-3.5 h-3.5 text-amber-300" />
-              <span>نقش الحجر 𓋹🔨</span>
+              <span>نقش الحجر</span>
             </button>
 
             <button
               onClick={() => setActiveTab('temple_runes')}
-              className={`flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold rounded-xl transition-all whitespace-nowrap ${
+              className={`flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold rounded-xl transition-all whitespace-nowrap shrink-0 ${
                 activeTab === 'temple_runes' ? 'bg-amber-800 text-white shadow-xs' : 'text-stone-700 hover:text-stone-900'
               }`}
             >
               <KeyRound className="w-3.5 h-3.5 text-amber-300" />
-              <span>فك طلاسم المعبد 🗝️</span>
+              <span>فك طلاسم المعبد</span>
             </button>
 
             <button
               onClick={() => setActiveTab('flash_memory')}
-              className={`flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold rounded-xl transition-all whitespace-nowrap ${
+              className={`flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold rounded-xl transition-all whitespace-nowrap shrink-0 ${
                 activeTab === 'flash_memory' ? 'bg-amber-800 text-white shadow-xs' : 'text-stone-700 hover:text-stone-900'
               }`}
             >
               <Brain className="w-3.5 h-3.5 text-amber-300" />
-              <span>تحدي الذاكرة الموقوتة 🔥</span>
+              <span>الذاكرة الموقوتة</span>
             </button>
 
             <button
               onClick={() => setActiveTab('speed')}
-              className={`flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold rounded-xl transition-all whitespace-nowrap ${
+              className={`flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold rounded-xl transition-all whitespace-nowrap shrink-0 ${
                 activeTab === 'speed' ? 'bg-amber-800 text-white shadow-xs' : 'text-stone-700 hover:text-stone-900'
               }`}
             >
               <Zap className="w-3.5 h-3.5 text-amber-300" />
-              <span>تحدي سرعة المفردات</span>
+              <span>سرعة المفردات</span>
             </button>
 
             <button
               onClick={() => setActiveTab('builder')}
-              className={`flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold rounded-xl transition-all whitespace-nowrap ${
+              className={`flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold rounded-xl transition-all whitespace-nowrap shrink-0 ${
                 activeTab === 'builder' ? 'bg-amber-800 text-white shadow-xs' : 'text-stone-700 hover:text-stone-900'
               }`}
             >
               <PenTool className="w-3.5 h-3.5 text-amber-300" />
-              <span>لغز تركيب الكلمات</span>
+              <span>تركيب الكلمات</span>
             </button>
 
             <button
               onClick={() => setActiveTab('memory')}
-              className={`flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold rounded-xl transition-all whitespace-nowrap ${
+              className={`flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold rounded-xl transition-all whitespace-nowrap shrink-0 ${
                 activeTab === 'memory' ? 'bg-amber-800 text-white shadow-xs' : 'text-stone-700 hover:text-stone-900'
               }`}
             >
               <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-              <span>ذاكرة معبد الكرنك</span>
+              <span>ذاكرة الكرنك</span>
             </button>
           </div>
         </div>
       </div>
 
       {/* Active Game Display */}
+      {activeTab === 'core_academy' && <ThreeCoreGamesAcademy />}
       {activeTab === 'stone_carving' && <StoneCarvingGame />}
       {activeTab === 'temple_runes' && <TempleRunesGame />}
       {activeTab === 'flash_memory' && <FlashMemoryGame />}

@@ -54,3 +54,44 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #B8860B;
 }
+
+@keyframes soundwave-ripple {
+  0% {
+    transform: translate(-50%, -50%) scale(0.2);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2.6);
+    opacity: 0;
+  }
+}
+
+@keyframes chisel-flash {
+  0% {
+    transform: translate(-50%, -50%) scale(0.4);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.25);
+    opacity: 0.85;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.8);
+    opacity: 0;
+  }
+}
+
+.animate-soundwave-ripple {
+  animation: soundwave-ripple 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-chisel-flash {
+  animation: chisel-flash 0.42s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-soundwave-ripple,
+  .animate-chisel-flash {
+    animation-duration: 0.01ms !important;
+  }
+}

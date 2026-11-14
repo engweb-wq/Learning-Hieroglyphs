@@ -437,7 +437,11 @@ const DEFAULT_PROGRESS: StudentProgressData = {
     versusWins: 2,
     royalExamScore: 100,
     templeRunes: 120,
-    stoneCarving: 150
+    stoneCarving: 150,
+    symbolRecognition: 0,
+    wordAssembly: 0,
+    meaningDecoder: 0,
+    pronunciationChallenge: 0
   },
   unlockedBadgeIds: [
     'badge-ankh-first-steps',

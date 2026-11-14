@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpen, Sparkles, Languages, Users, Award, History, Scroll, Video, Trophy, Eye, GraduationCap } from 'lucide-react';
+import { BookOpen, Sparkles, Languages, Users, Award, History, Scroll, Video, Trophy, Eye, GraduationCap, Hammer, Mic } from 'lucide-react';
 import { AudienceMode } from '../types';
 
 interface HeroSectionProps {
@@ -72,6 +72,18 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 </button>
 
                 <button
+                  onClick={() => onSelectMode('shared_roots')}
+                  className={`flex items-center gap-2 px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all whitespace-nowrap shrink-0 ${
+                    currentMode === 'shared_roots'
+                      ? 'bg-amber-800 text-white shadow-sm'
+                      : 'text-stone-700 hover:text-stone-900 hover:bg-stone-100'
+                  }`}
+                >
+                  <Languages className="w-4 h-4 text-amber-300" />
+                  <span>قاموس الجذور العربية</span>
+                </button>
+
+                <button
                   onClick={() => onSelectMode('video_dict')}
                   className={`flex items-center gap-2 px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all whitespace-nowrap shrink-0 ${
                     currentMode === 'video_dict'
@@ -108,6 +120,18 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 </button>
 
                 <button
+                  onClick={() => onSelectMode('stone_engraving')}
+                  className={`flex items-center gap-2 px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all whitespace-nowrap shrink-0 ${
+                    currentMode === 'stone_engraving'
+                      ? 'bg-amber-800 text-white shadow-sm'
+                      : 'text-stone-700 hover:text-stone-900 hover:bg-stone-100'
+                  }`}
+                >
+                  <Hammer className="w-4 h-4 text-amber-300" />
+                  <span>لوح النقش الحجري</span>
+                </button>
+
+                <button
                   onClick={() => onSelectMode('games')}
                   className={`flex items-center gap-2 px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all whitespace-nowrap shrink-0 ${
                     currentMode === 'games'
@@ -116,7 +140,19 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   }`}
                 >
                   <Sparkles className="w-4 h-4 text-amber-300" />
-                  <span>6 ألعاب تفاعلية 🔥</span>
+                  <span>ألعاب التعلم التفاعلية</span>
+                </button>
+
+                <button
+                  onClick={() => onSelectMode('pronunciation')}
+                  className={`flex items-center gap-2 px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all whitespace-nowrap shrink-0 ${
+                    currentMode === 'pronunciation'
+                      ? 'bg-amber-800 text-white shadow-sm'
+                      : 'text-stone-700 hover:text-stone-900 hover:bg-stone-100'
+                  }`}
+                >
+                  <Mic className="w-4 h-4 text-amber-300" />
+                  <span>تحدي النطق</span>
                 </button>
 
                 <button
