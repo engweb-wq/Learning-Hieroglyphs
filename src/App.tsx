@@ -33,9 +33,10 @@ import { DailyRiddleCorner } from './components/puzzles/DailyRiddleCorner';
 import { SimplifiedGrammarGuide } from './components/grammar/SimplifiedGrammarGuide';
 import { SoundLibraryStudio } from './components/audio/SoundLibraryStudio';
 import { ResurrectionJourney } from './components/papyri/ResurrectionJourney';
+import { MagicAmuletsDictionary } from './components/dictionary/MagicAmuletsDictionary';
 import { InteractiveScribeQuiz } from './components/quiz/InteractiveScribeQuiz';
 import { Footer } from './components/Footer';
-import { Sparkles, BookOpen, Languages, PenTool, Zap, Award, History, Scroll, Video, Trophy, Eye, GraduationCap, Crown, Landmark, Hammer, Mic, Compass, Puzzle, BookOpenCheck, Volume2, VolumeX, Radio, Sun } from 'lucide-react';
+import { Sparkles, BookOpen, Languages, PenTool, Zap, Award, History, Scroll, Video, Trophy, Eye, GraduationCap, Crown, Landmark, Hammer, Mic, Compass, Puzzle, BookOpenCheck, Volume2, VolumeX, Radio, Sun, Gem } from 'lucide-react';
 import { UNILITERAL_HIEROGLYPHS } from './data/hieroglyphsData';
 import { soundFX, SoundSettings } from './utils/soundEffects';
 
@@ -143,6 +144,18 @@ export default function App() {
             >
               <Languages className="w-4 h-4 text-amber-400" />
               <span>قاموس الجذور العربية</span>
+            </button>
+
+            <button
+              onClick={() => setCurrentMode('amulets')}
+              className={`flex items-center gap-2 px-3.5 py-2 text-xs sm:text-sm font-bold rounded-xl transition-all whitespace-nowrap shrink-0 ${
+                currentMode === 'amulets'
+                  ? 'bg-amber-800 text-white shadow-sm'
+                  : 'bg-white/80 hover:bg-white text-stone-700 border border-stone-200'
+              }`}
+            >
+              <Gem className="w-4 h-4 text-amber-400" />
+              <span>قاموس التمائم السحرية</span>
             </button>
 
             <button
@@ -644,6 +657,13 @@ export default function App() {
         {currentMode === 'rebirth_journey' && (
           <div className="space-y-14 animate-fadeIn">
             <ResurrectionJourney />
+          </div>
+        )}
+
+        {/* MAGIC AMULETS DICTIONARY */}
+        {currentMode === 'amulets' && (
+          <div className="space-y-14 animate-fadeIn">
+            <MagicAmuletsDictionary />
           </div>
         )}
 

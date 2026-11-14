@@ -7,7 +7,7 @@ import {
   Crown, Award, PenTool, Flame, Building, Home, Cookie, Utensils,
   GlassWater, Soup, Coffee, Cake, FlameKindling, Wheat, Shirt,
   Feather, Bird, AlertTriangle, Fish, SunMedium, SmilePlus, Scale,
-  ArrowRightLeft, Flower2, AudioWaveform, Gauge, Languages
+  ArrowRightLeft, Flower2, AudioWaveform, Gauge, Languages, Gem
 } from 'lucide-react';
 import { DICTIONARY_50_WORDS, DICTIONARY_CATEGORIES } from '../../data/dictionary50Words';
 import { DictionaryWord } from '../../types';
@@ -21,6 +21,7 @@ import { EgyptianAntonymsSection } from './EgyptianAntonymsSection';
 import { AnimalsBirdsDictionary } from './AnimalsBirdsDictionary';
 import { PlantsFloraDictionary } from './PlantsFloraDictionary';
 import { SharedArabicRootsDictionary } from './SharedArabicRootsDictionary';
+import { MagicAmuletsDictionary } from './MagicAmuletsDictionary';
 
 // Icon Map resolver
 const getIconComponent = (name: string) => {
@@ -36,11 +37,11 @@ const getIconComponent = (name: string) => {
 };
 
 interface VisualDictionaryProps {
-  initialSubTab?: 'words' | 'shared_roots' | 'antonyms' | 'fauna' | 'flora';
+  initialSubTab?: 'words' | 'shared_roots' | 'antonyms' | 'fauna' | 'flora' | 'amulets';
 }
 
 export const VisualDictionary: React.FC<VisualDictionaryProps> = ({ initialSubTab = 'words' }) => {
-  const [dictSubTab, setDictSubTab] = useState<'words' | 'shared_roots' | 'antonyms' | 'fauna' | 'flora'>(initialSubTab);
+  const [dictSubTab, setDictSubTab] = useState<'words' | 'shared_roots' | 'antonyms' | 'fauna' | 'flora' | 'amulets'>(initialSubTab);
 
   useEffect(() => {
     setDictSubTab(initialSubTab);
@@ -234,6 +235,21 @@ export const VisualDictionary: React.FC<VisualDictionaryProps> = ({ initialSubTa
             <Flower2 className="w-4 h-4 text-emerald-300" />
             <span>النباتات والزهور (14)</span>
           </button>
+
+          <button
+            onClick={() => {
+              setDictSubTab('amulets');
+              soundFX.playClickSound();
+            }}
+            className={`flex items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-bold rounded-xl transition-all whitespace-nowrap shrink-0 ${
+              dictSubTab === 'amulets'
+                ? 'bg-amber-800 text-white shadow-xs'
+                : 'text-stone-700 hover:text-stone-900 hover:bg-stone-100'
+            }`}
+          >
+            <Gem className="w-4 h-4 text-amber-300" />
+            <span>التمائم السحرية (6)</span>
+          </button>
         </div>
 
         <div className="text-xs text-stone-500 font-medium">
@@ -242,6 +258,7 @@ export const VisualDictionary: React.FC<VisualDictionaryProps> = ({ initialSubTa
           {dictSubTab === 'antonyms' && '12 ثنائية متناقضة مع شواهد نحوية'}
           {dictSubTab === 'fauna' && '16 كائناً مقدساً ودلالاتها الرمزية والأسطورية'}
           {dictSubTab === 'flora' && '14 نبتة وزهرة مقدسة ودلالاتها في النصوص الجنائزية واليومية'}
+          {dictSubTab === 'amulets' && 'تمائم الحماية والبعث والخلود مع دلالاتها في اللغة الهيروغليفية'}
         </div>
       </div>
 
@@ -256,6 +273,9 @@ export const VisualDictionary: React.FC<VisualDictionaryProps> = ({ initialSubTa
 
       {/* Render Plants & Flowers Section */}
       {dictSubTab === 'flora' && <PlantsFloraDictionary />}
+
+      {/* Render Magic Amulets Dictionary Section */}
+      {dictSubTab === 'amulets' && <MagicAmuletsDictionary />}
 
       {/* Render 50 Core Words Section */}
       {dictSubTab === 'words' && (

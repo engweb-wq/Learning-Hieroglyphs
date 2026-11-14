@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpen, Sparkles, Languages, Users, Award, History, Scroll, Video, Trophy, Eye, GraduationCap, Hammer, Mic, Compass, Puzzle, BookOpenCheck, Volume2, Sun } from 'lucide-react';
+import { BookOpen, Sparkles, Languages, Users, Award, History, Scroll, Video, Trophy, Eye, GraduationCap, Hammer, Mic, Compass, Puzzle, BookOpenCheck, Volume2, Sun, Gem } from 'lucide-react';
 import { AudienceMode } from '../types';
 
 interface HeroSectionProps {
@@ -81,6 +81,18 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 >
                   <Languages className="w-4 h-4 text-amber-300" />
                   <span>قاموس الجذور العربية</span>
+                </button>
+
+                <button
+                  onClick={() => onSelectMode('amulets')}
+                  className={`flex items-center gap-2 px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all whitespace-nowrap shrink-0 ${
+                    currentMode === 'amulets'
+                      ? 'bg-amber-800 text-white shadow-sm'
+                      : 'text-stone-700 hover:text-stone-900 hover:bg-stone-100'
+                  }`}
+                >
+                  <Gem className="w-4 h-4 text-amber-300" />
+                  <span>قاموس التمائم السحرية</span>
                 </button>
 
                 <button
